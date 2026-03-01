@@ -1,10 +1,12 @@
 // ---------- Helpers ----------
 function playInAnimation() {
+  const wrap = document.getElementById("pageWrap") || document.body;
+
   // restart animation safely (also for BFCache)
-  document.body.classList.remove("animate-out");
-  document.body.classList.remove("animate-in");
+  wrap.classList.remove("animate-out");
+  wrap.classList.remove("animate-in");
   requestAnimationFrame(() => {
-    document.body.classList.add("animate-in");
+    wrap.classList.add("animate-in");
   });
 }
 
@@ -21,6 +23,28 @@ document.addEventListener("DOMContentLoaded", () => {
   const interestSelect = document.querySelector("#interestSelect");
   if (paket && interestSelect) {
     interestSelect.value = paket;
+  }
+
+  // =========================
+  // COOKIE BANNER LOGIC (SAFE)
+  // =========================
+  const cookieBanner = document.getElementById("cookieBanner");
+  const acceptBtn = document.getElementById("acceptCookies");
+  const declineBtn = document.getElementById("declineCookies");
+
+  if (cookieBanner) {
+    const cookieChoice = localStorage.getItem("cookieConsent");
+    if (!cookieChoice) cookieBanner.style.display = "block";
+
+    acceptBtn?.addEventListener("click", () => {
+      localStorage.setItem("cookieConsent", "accepted");
+      cookieBanner.style.display = "none";
+    });
+
+    declineBtn?.addEventListener("click", () => {
+      localStorage.setItem("cookieConsent", "declined");
+      cookieBanner.style.display = "none";
+    });
   }
 });
 
@@ -71,8 +95,9 @@ document.addEventListener("click", (e) => {
   e.preventDefault();
   closeMobileNav();
 
-  document.body.classList.remove("animate-in");
-  document.body.classList.add("animate-out");
+  const wrap = document.getElementById("pageWrap") || document.body;
+  wrap.classList.remove("animate-in");
+  wrap.classList.add("animate-out");
 
   setTimeout(() => {
     window.location.href = href;
@@ -127,27 +152,4 @@ form?.addEventListener("submit", async (e) => {
       submitBtn.textContent = "Anfrage senden";
     }
   }
-});
-
-// =========================
-// COOKIE BANNER LOGIC
-// =========================
-const cookieBanner = document.getElementById("cookieBanner");
-const acceptBtn = document.getElementById("acceptCookies");
-const declineBtn = document.getElementById("declineCookies");
-
-const cookieChoice = localStorage.getItem("cookieConsent");
-
-if (!cookieChoice && cookieBanner) {
-  cookieBanner.style.display = "block";
-}
-
-acceptBtn?.addEventListener("click", () => {
-  localStorage.setItem("cookieConsent", "accepted");
-  cookieBanner.style.display = "none";
-});
-
-declineBtn?.addEventListener("click", () => {
-  localStorage.setItem("cookieConsent", "declined");
-  cookieBanner.style.display = "none";
 });
