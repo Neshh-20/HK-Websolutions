@@ -19,6 +19,7 @@
 
 *{box-sizing:border-box}
 html{scroll-behavior:smooth; height:100%}
+
 body{
   height:100%;
   margin:0;
@@ -31,32 +32,29 @@ body{
     linear-gradient(180deg, #050a08 0%, #070f0c 55%, #060b09 100%);
   overflow-x:hidden;
 
-  /* body bleibt neutral (fixed-safe) */
-  opacity:1;
-  transform:none;
+  /* Body bleibt neutral (fixed-safe) */
+  opacity: 1;
+  transform: none;
 }
 
+a{color:inherit; text-decoration:none}
+.container{width:min(1100px, 92vw); margin-inline:auto}
+
 /* =========================
-   LAYOUT FIX: keine Lücke unten
-   (#pageWrap muss in jeder HTML existieren)
+   PAGE WRAP: Sticky Footer + keine Lücke unten
+   (funktioniert nur, wenn #pageWrap im HTML existiert)
    ========================= */
 #pageWrap{
   min-height:100vh;
   display:flex;
   flex-direction:column;
-
-  /* Default sichtbar */
-  opacity:1;
-  transform:none;
+  opacity: 1;
+  transform: none;
 }
 #pageWrap main{flex:1}
 
-/* =========================
-   PAGE TRANSITIONS (SAFE)
-   ========================= */
-#pageWrap.animate-in{
-  animation: pageIn .22s ease both;
-}
+/* Page transitions (falls dein JS #pageWrap nutzt) */
+#pageWrap.animate-in{ animation: pageIn .22s ease both; }
 @keyframes pageIn{
   from{opacity:0; transform: translateY(8px);}
   to{opacity:1; transform: translateY(0);}
@@ -67,8 +65,13 @@ body{
   transition: opacity .20s ease, transform .20s ease;
 }
 
-a{color:inherit; text-decoration:none}
-.container{width:min(1100px, 92vw); margin-inline:auto}
+/* Falls dein JS noch body.animate-in/out nutzt: harmless fallback */
+body.animate-in{ animation: pageIn .22s ease both; }
+body.animate-out{
+  opacity:0;
+  transform: translateY(10px);
+  transition: opacity .20s ease, transform .20s ease;
+}
 
 .topGlow{
   position:fixed; inset:0 0 auto 0; height:3px;
@@ -116,7 +119,7 @@ a{color:inherit; text-decoration:none}
 }
 
 /* =========================
-   BURGER (fix: 3 Striche untereinander)
+   BURGER (3 Striche untereinander)
    ========================= */
 .burger{
   display:none;
@@ -127,8 +130,8 @@ a{color:inherit; text-decoration:none}
   color:var(--text);
   align-items:center;
   justify-content:center;
-  flex-direction:column;          /* <-- wichtig */
-  gap:5px;                         /* Abstand zwischen Strichen */
+  flex-direction: column;
+  gap:6px;
   padding:0;
 }
 .burger span{
@@ -344,16 +347,6 @@ h1{
     rgba(255,255,255,.03);
   border-color: rgba(34,197,94,.28);
 }
-.featuredBadge{
-  position:absolute; right: 14px; top: 14px;
-  padding: 8px 10px;
-  border-radius: 999px;
-  font-weight: 900;
-  font-size:.85rem;
-  background: linear-gradient(135deg, rgba(34,197,94,.95), rgba(74,222,128,.90));
-  color:#052e1b;
-  border:1px solid rgba(255,255,255,.14);
-}
 
 /* References */
 .refGrid{display:grid; grid-template-columns: 1fr; gap: 14px}
@@ -461,12 +454,6 @@ textarea{resize: vertical; min-height: 120px}
   margin-top: 12px;
   font-weight: 900;
 }
-.formHint{
-  border:1px solid rgba(34,197,94,.22);
-  background: rgba(34,197,94,.08);
-  border-radius: var(--radius);
-  padding: 18px;
-}
 
 /* Legal */
 .legalBox{
@@ -519,7 +506,7 @@ textarea{resize: vertical; min-height: 120px}
 }
 
 /* =========================
-   COOKIE BANNER (fixed)
+   COOKIE BANNER (schwebend)
    ========================= */
 .cookie-banner{
   position:fixed;
@@ -545,44 +532,27 @@ textarea{resize: vertical; min-height: 120px}
   flex-wrap:wrap;
 }
 
-.cookie-text{
-  max-width:600px;
-}
+.cookie-text{ max-width:600px; }
+.cookie-text strong{ display:block; margin-bottom:6px; }
+.cookie-text p{ margin:0; color:var(--muted); font-size:.95rem; }
 
-.cookie-text strong{
-  display:block;
-  margin-bottom:6px;
-}
+.cookie-actions{ display:flex; gap:10px; }
 
-.cookie-text p{
-  margin:0;
-  color:var(--muted);
-  font-size:.95rem;
-}
-
-.cookie-actions{
-  display:flex;
-  gap:10px;
-}
-
-.cookie-link{
-  display:inline-block;
-  margin-top:8px;
-  color: rgba(236,253,245,.92);
-  text-decoration: underline;
-  text-decoration-color: rgba(236,253,245,.25);
-}
-
-/* Mobile */
 @media (max-width:600px){
-  .cookie-content{
-    flex-direction:column;
-    align-items:flex-start;
-  }
-  .cookie-actions{
-    width:100%;
-  }
-  .cookie-actions button{
-    width:100%;
+  .cookie-content{ flex-direction:column; align-items:flex-start; }
+  .cookie-actions{ width:100%; }
+  .cookie-actions button{ width:100%; }
+}
+
+/* =========================
+   FIX: Zu viel „Luft“ vor Footer
+   -> NUR letzte Section weniger padding-bottom
+   ========================= */
+#pageWrap main > .section:last-child{
+  padding-bottom: 18px !important;
+}
+@media (max-width: 980px){
+  #pageWrap main > .section:last-child{
+    padding-bottom: 12px !important;
   }
 }
