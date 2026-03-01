@@ -556,3 +556,19 @@ textarea{resize: vertical; min-height: 120px}
     padding-bottom: 12px !important;
   }
 }
+
+/* =========================
+   FIX: Abstand vor Footer
+   ========================= */
+
+/* NUR die letzte Section bekommt weniger Abstand nach unten */
+main > .section:last-of-type{
+  padding-bottom: 16px !important;
+}
+
+/* Mobile noch etwas enger */
+@media (max-width: 768px){
+  main > .section:last-of-type{
+    padding-bottom: 10px !important;
+  }
+}
